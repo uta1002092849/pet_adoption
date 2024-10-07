@@ -2,3 +2,5 @@ psycopg2-binary
 sqlalchemy
 sqlalchemy-cockroachdb
 pytest
+grpcio
+grpcio-tools
