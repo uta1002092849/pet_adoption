@@ -1,14 +1,14 @@
 syntax = "proto3";
 
-option go_package = "./go";
+option go_package = "go/petAdoption";
 
 package petAdoption;
 
 // The pet object definition
 message Pet {
-    int32 pet_id = 1; // ID of the pet
-    string pet_name = 2; // Name of the pet
-    string pet_gender = 3; // Gender of the pet
+    int32 id = 1; // ID of the pet
+    string name = 2; // Name of the pet
+    string gender = 3; // Gender of the pet
     int32 age = 4; // Age of the pet
     string breed = 5; // Breed of the pet
     bytes picture = 6; // Picture of the pet
@@ -16,8 +16,8 @@ message Pet {
 
 // Request message for inserting a pet
 message InsertPetRequest {
-    string pet_name = 1;
-    string pet_gender = 2;
+    string name = 1;
+    string gender = 2;
     int32 age = 3;
     string breed = 4;
     bytes picture = 5;
@@ -30,7 +30,7 @@ message InsertPetResponse {
 
 // Request message for searching pets
 message SearchPetRequest {
-    string search_term = 1;
+    string searchTerm = 1;
 }
 
 // Response message for search results
