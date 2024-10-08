@@ -102,8 +102,8 @@ class PetAdoptionAPI:
 
         pets = self.session.query(Pet).filter(
             or_(
-                Pet.pet_name.ilike(like_term),
-                Pet.pet_gender.ilike(like_term),
+                Pet.name.ilike(like_term),
+                Pet.gender.ilike(like_term),
                 Pet.breed.ilike(like_term),
                 Pet.age == age_term if age_term is not None else False
             )
