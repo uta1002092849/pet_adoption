@@ -9,7 +9,7 @@ class Pet(Base):
     __tablename__ = 'pet'
     __table_args__ = {'schema': 'client_schema'}  # Specify schema
 
-    pet_id = Column(Integer, primary_key=True)
+    pet_id = Column(String, primary_key=True)
     pet_name = Column(String, nullable=False)
     pet_gender = Column(String, nullable=False)
     age = Column(OID, nullable=False)
