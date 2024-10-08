@@ -1,8 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Pet
 from sqlalchemy import or_
+from sqlalchemy import Column, String, LargeBinary
+from sqlalchemy.dialects.postgresql import OID
+from sqlalchemy.orm import declarative_base
+import uuid
 
+Base = declarative_base()
 # Constants for pet adoption database
 DB_NAME = 'petadoptiondb'
 SCHEMA_NAME = 'client_schema'
@@ -10,6 +14,22 @@ PET_TABLE_NAME = 'pet'
 SQL_DB_IMPLEMENTATION = 'cockroachdb'
 DEFAULT_HOST = 'localhost'
 DEFAULT_PORT = '26257'
+
+class Pet(Base):
+    """The Pet class corresponds to the client_schema.Pet table."""
+    __tablename__ = 'pet'
+    __table_args__ = {'schema': 'client_schema'}  # Specify schema
+
+    id = Column(String, primary_key=True)
+    name = Column(String, nullable=False)
+    gender = Column(String, nullable=False)
+    age = Column(OID, nullable=False)
+    breed = Column(String, nullable=False)
+    picture = Column(LargeBinary)
+
+    def __repr__(self):
+        """Return a human-readable representation of a Pet."""
+        return f"Pet(pet_id={self.id}, pet_name={self.name}, pet_gender={self.gender}, age={self.age}, breed={self.breed})"
 
 class PetAdoptionAPI:
     def __init__(self, db_uri):
@@ -33,8 +53,9 @@ class PetAdoptionAPI:
             bool: True if the pet was successfully inserted, False otherwise.
         """
         new_pet = Pet(
-            pet_name=pet_name,
-            pet_gender=pet_gender,
+            id = str(uuid.uuid4()),
+            name=pet_name,
+            gender=pet_gender,
             age=pet_age,
             breed=pet_breed,
             picture=pet_picture

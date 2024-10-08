@@ -6,8 +6,7 @@ import uuid
 import petAdoption_pb2
 import petAdoption_pb2_grpc
 
-from api.petAdoptionApi import PetAdoptionAPI
-
+from petAdoptionApi import PetAdoptionAPI
 api = PetAdoptionAPI(None)
 
 class PetAdoptionServicer(petAdoption_pb2_grpc.PetAdoptionServicer):
