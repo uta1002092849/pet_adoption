@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Adoption Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        .column {
+            flex: 1;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        h2 {
+            color: #3498db;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .success {
+            background-color: #2ecc71;
+            color: #fff;
+        }
+        .error {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+        #searchResults {
+            margin-top: 20px;
+        }
+        .pet-card {
+            background-color: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .pet-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pet Adoption Interface</h1>
+    
+    <div class="container">
+        <div class="column">
+            <h2>Insert Pet</h2>
+            <form id="insertPetForm" enctype="multipart/form-data">
+                <input type="text" name="name" placeholder="Pet Name" required>
+                <input type="text" name="gender" placeholder="Gender" required>
+                <input type="number" name="age" placeholder="Age" required>
+                <input type="text" name="breed" placeholder="Breed" required>
+                <input type="file" name="picture" accept="image/*" required>
+                <button type="submit">Insert Pet</button>
+            </form>
+            <div id="insertMessage" class="message"></div>
+        </div>
+        
+        <div class="column">
+            <h2>Search Pet</h2>
+            <form id="searchPetForm">
+                <input type="text" id="searchTerm" placeholder="Search Term" required>
+                <button type="submit">Search</button>
+            </form>
+            <div id="searchMessage" class="message"></div>
+            <div id="searchResults"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('insertPetForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            fetch('/insert-pet', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageEl = document.getElementById('insertMessage');
+                messageEl.textContent = data.success ? 'Pet inserted successfully' : 'Pet insertion failed';
+                messageEl.className = 'message ' + (data.success ? 'success' : 'error');
+            })
+            .catch(error => {
+                const messageEl = document.getElementById('insertMessage');
+                messageEl.textContent = 'Error inserting pet: ' + error;
+                messageEl.className = 'message error';
+            });
+        });
+
+        document.getElementById('searchPetForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const searchTerm = document.getElementById('searchTerm').value;
+            
+            fetch('/search-pet?term=' + encodeURIComponent(searchTerm))
+            .then(response => response.json())
+            .then(data => {
+                const resultsDiv = document.getElementById('searchResults');
+                const messageEl = document.getElementById('searchMessage');
+                resultsDiv.innerHTML = '';
+                if (data.pets && data.pets.length > 0) {
+                    messageEl.textContent = `Found ${data.pets.length} pet(s)`;
+                    messageEl.className = 'message success';
+                    data.pets.forEach(pet => {
+                        resultsDiv.innerHTML += `
+                            <div class="pet-card">
+                                <h3>${pet.name}</h3>
+                                <p><strong>ID:</strong> ${pet.id}</p>
+                                <p><strong>Gender:</strong> ${pet.gender}</p>
+                                <p><strong>Age:</strong> ${pet.age}</p>
+                                <p><strong>Breed:</strong> ${pet.breed}</p>
+                                <img src="data:image/jpeg;base64,${pet.picture}" alt="${pet.name}">
+                            </div>
+                        `;
+                    });
+                } else {
+                    messageEl.textContent = 'No pets found.';
+                    messageEl.className = 'message error';
+                }
+            })
+            .catch(error => {
+                const messageEl = document.getElementById('searchMessage');
+                messageEl.textContent = 'Error searching for pets: ' + error;
+                messageEl.className = 'message error';
+            });
+        });
+    </script>
+</body>
+</html>
