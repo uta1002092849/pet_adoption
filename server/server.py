@@ -34,9 +34,9 @@ class PetAdoptionServicer(petAdoption_pb2_grpc.PetAdoptionServicer):
         response = []
         for match in result:
             response.append(petAdoption_pb2.Pet(
-                id= str(match.pet_id),
-                name=match.pet_name,
-                gender=match.pet_gender,
+                id= str(match.id),
+                name=match.name,
+                gender=match.gender,
                 age = match.age,
                 breed = match.breed,
                 picture = match.picture
