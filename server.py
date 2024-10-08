@@ -2,6 +2,7 @@ from concurrent import futures
 import logging
 
 import grpc
+import uuid
 import petAdoption_pb2
 import petAdoption_pb2_grpc
 
@@ -29,12 +30,12 @@ class PetAdoptionServicer(petAdoption_pb2_grpc.PetAdoptionServicer):
             return petAdoption_pb2.InsertPetResponse(success=False)
     
     def SearchPet(self, request, context):
-        search_phrase = request.search_term
-        result = api.SearchPet(search_phrase)
+        search_phrase = request.searchTerm
+        result = api.search_pet(search_phrase)
         response = []
         for match in result:
             response.append(petAdoption_pb2.Pet(
-                id= match.pet_id,
+                id= str(match.pet_id),
                 name=match.pet_name,
                 gender=match.pet_gender,
                 age = match.age,

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"log"
 	"time"
 
@@ -29,23 +30,39 @@ func main() {
 	defer cancel()
 
 	// Define a new pet to insert
-	pet_request := &pb.InsertPetRequest{
-		Name:   "Frodo",
-		Gender: "Non-binary",
-		Age:    100291,
-		Breed:  "Fucking dog",
-	}
+	// pet_request := &pb.InsertPetRequest{
+	// 	Name:   "Frodo",
+	// 	Gender: "Non-binary",
+	// 	Age:    100291,
+	// 	Breed:  "Fucking dog",
+	// }
 
-	// Call the translate service
-	r, err := c.InsertPet(ctx, pet_request)
+	// // Call the translate service
+	// r, err := c.InsertPet(ctx, pet_request)
+	// if err != nil {
+	// 	log.Fatalf("could not call insert pet: %v", err)
+	// }
+
+	// if r.Success {
+	// 	log.Printf("Pet inserted successfully")
+	// } else {
+	// 	log.Printf("Pet insertion failed")
+	// }
+
+	// search for pet
+	r, err := c.SearchPet(ctx, &pb.SearchPetRequest{SearchTerm: "cat"})
+
 	if err != nil {
-		log.Fatalf("could not call insert pet: %v", err)
+		log.Printf("Coulnt search for pet")
 	}
 
-	if r.Success {
-		log.Printf("Pet inserted successfully")
-	} else {
-		log.Printf("Pet insertion failed")
+	for index, pet := range r.Pets {
+		fmt.Println("Index:", index)
+		fmt.Println("\tPet ID:", pet.Id)
+		fmt.Println("\tPet Name:", pet.Name)
+		fmt.Println("\tPet Gener:", pet.Gender)
+		fmt.Println("\tPet Gener:", pet.Breed)
+		fmt.Println("\tPet Picture:", pet.Picture)
 	}
 
 }
