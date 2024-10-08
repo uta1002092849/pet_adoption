@@ -2,27 +2,27 @@ from concurrent import futures
 import logging
 
 import grpc
-from generated_grpc_code.python import petAdoption_pb2_grpc
-from generated_grpc_code.python import petAdoption_pb2
+import petAdoption_pb2
+import petAdoption_pb2_grpc
 
-from api.petAdoptionApi import PetAdoptionApi
+from api.petAdoptionApi import PetAdoptionAPI
 
-api = PetAdoptionApi()
+api = PetAdoptionAPI(None)
 
-class Translator(petAdoption_pb2_grpc.PetAdoptionServicer):
+class PetAdoptionServicer(petAdoption_pb2_grpc.PetAdoptionServicer):
     
     def InsertPet(self, request, context):
         insert_pet = {
-            'pet_name': request.pet_name,
-            'pet_gender': request.pet_gender,
-            'pet_age': request.pet_age,
-            'pet_breed': request.pet_breed,
-            'pet_picture': request.pet_picture,
+            'pet_name': request.name,
+            'pet_gender': request.gender,
+            'pet_age': request.age,
+            'pet_breed': request.breed,
+            'pet_picture': request.picture,
         }
         
 
         # Call the API
-        response = api.InsertPet(**insert_pet)
+        response = api.insert_pet(**insert_pet)
         if response:
             return petAdoption_pb2.InsertPetResponse(success=True)
         else:
@@ -34,9 +34,9 @@ class Translator(petAdoption_pb2_grpc.PetAdoptionServicer):
         response = []
         for match in result:
             response.append(petAdoption_pb2.Pet(
-                pet_id= match.pet_id,
-                pet_name=match.pet_name,
-                pet_gender=match.pet_gender,
+                id= match.pet_id,
+                name=match.pet_name,
+                gender=match.pet_gender,
                 age = match.age,
                 breed = match.breed,
                 picture = match.picture
@@ -47,7 +47,7 @@ class Translator(petAdoption_pb2_grpc.PetAdoptionServicer):
 def serve():
     port = "50051"
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    petAdoption_pb2_grpc.add_TranslateServicer_to_server(Translator(), server)
+    petAdoption_pb2_grpc.add_PetAdoptionServicer_to_server(PetAdoptionServicer(), server)
     server.add_insecure_port("[::]:" + port)
     server.start()
     print("Server started, listening on " + port)
