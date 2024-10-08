@@ -27,6 +27,11 @@ init-table: up
 	@docker exec -it roach1 ./cockroach sql --insecure --host=roach1:26257 -f /cockroach/init.sql
 	@echo "Pet adoption tables initialized."
 
+# Show tables in the cluster
+show-tables:
+	@echo "Showing tables in the CockroachDB cluster..."
+	@docker exec -it roach1 ./cockroach sql --insecure --host=roach1:26257 -e "SELECT * FROM petadoptiondb.client_schema.pet;"
+
 # Stop the cluster
 down:
 	@echo "Stopping the CockroachDB cluster..."
