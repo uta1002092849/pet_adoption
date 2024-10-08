@@ -4,7 +4,7 @@
 // - protoc             v3.21.12
 // source: petAdoption.proto
 
-package _go
+package petAdoption
 
 import (
 	context "context"
