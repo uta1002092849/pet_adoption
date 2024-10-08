@@ -87,5 +87,4 @@ class PetAdoptionAPI:
                 Pet.age == age_term if age_term is not None else False
             )
         ).all()
-
         return pets

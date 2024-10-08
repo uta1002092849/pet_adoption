@@ -6,7 +6,7 @@ package petAdoption;
 
 // The pet object definition
 message Pet {
-    int32 id = 1; // ID of the pet
+    string id = 1; // ID of the pet
     string name = 2; // Name of the pet
     string gender = 3; // Gender of the pet
     int32 age = 4; // Age of the pet
