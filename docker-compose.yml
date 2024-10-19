@@ -5,8 +5,8 @@ services:
     hostname: roach1
     networks:
       - roachnet
-    # ports:
-    #   - "26257:26257"
+    ports:
+      - "26257:26257" # Expose to run pytest only
     #   - "8080:8080"
     volumes:
       - roach1:/cockroach/cockroach-data
