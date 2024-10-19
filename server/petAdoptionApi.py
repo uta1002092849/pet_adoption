@@ -52,6 +52,11 @@ class PetAdoptionAPI:
         Returns:
             bool: True if the pet was successfully inserted, False otherwise.
         """
+        
+        # Validate the input data
+        if not pet_name or pet_gender.lower() not in ['male', 'female'] or pet_age <= 0 or not pet_breed or not pet_picture:
+            return False
+        
         new_pet = Pet(
             id = str(uuid.uuid4()),
             name=pet_name,
@@ -60,6 +65,13 @@ class PetAdoptionAPI:
             breed=pet_breed,
             picture=pet_picture
         )
+        
+        # Check if the pet already exists
+        existing_pet = self.search_pet(pet_name)
+        # compare the pet details to check if the pet already exists
+        if existing_pet:
+            return False
+            
         
         try:
             self.session.add(new_pet)
