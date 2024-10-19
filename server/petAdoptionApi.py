@@ -12,7 +12,7 @@ DB_NAME = 'petadoptiondb'
 SCHEMA_NAME = 'client_schema'
 PET_TABLE_NAME = 'pet'
 SQL_DB_IMPLEMENTATION = 'cockroachdb'
-DEFAULT_HOST = 'localhost'
+DEFAULT_HOST = 'roach1'
 DEFAULT_PORT = '26257'
 
 class Pet(Base):
